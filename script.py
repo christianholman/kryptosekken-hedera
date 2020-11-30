@@ -15,13 +15,12 @@ headers = {
 }
 interval = 1000
 
-fields = ["Tidspunkt", "Type", "Inn", "Inn-Valuta", "Ut", "Ut-Valuta", "Gebyr", "Gebyr-Valuta", "Marked", "Notat"]
-file_name = "report_%s.csv" % datetime.now().replace(microsecond=0).isoformat()
-
 if not os.path.exists("output"):
     os.makedirs("output")
 
-with open("output/" + file_name, "w+") as csvfile:
+file_path = "output/report_%s.csv" % datetime.now().replace(microsecond=0).isoformat()
+with open(file_path, "w+") as csvfile:
+    fields = ["Tidspunkt", "Type", "Inn", "Inn-Valuta", "Ut", "Ut-Valuta", "Gebyr", "Gebyr-Valuta", "Marked", "Notat"]
     writer = csv.writer(csvfile)
     writer.writerow(fields)
 
@@ -30,7 +29,7 @@ def get_transfers(from_number):
     response_body = r.json()
 
     for transfer in response_body["data"]:
-        with open(file_name, "a") as csvfile:
+        with open(file_path, "a") as csvfile:
             writer = csv.writer(csvfile)
 
             transfer_amount_hbar = transfer["amount"] / 100000000
@@ -53,7 +52,6 @@ def get_transfers(from_number):
     if ((from_number + response_body["size"]) < response_body["totalCount"]):
         get_transfers(from_number + interval) 
     else:
-        print(file_name + " created!")
+        print(file_path + " created!")
 
 get_transfers(0)
-
