@@ -30,7 +30,6 @@ def main():
         r = requests.get("https://api.dragonglass.me/hedera/api/accounts/%s/transactions?from=%s&size=%s" % (account_id, from_number, interval), headers=headers)
         response_body = r.json()
 
-        print(response_body)
         for transaction in response_body["data"]:
             with open(file_path, "a") as csvfile:
                 writer = csv.writer(csvfile)
